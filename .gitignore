@@ -1,0 +1,9 @@
+# Custom ignore rules for Team Expense System
+backend/target/
+frontend/dist/
+frontend/node_modules/
+*.log
+.env
+uploads/receipts/
+.vscode/
+.idea/
