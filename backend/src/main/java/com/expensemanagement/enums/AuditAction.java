@@ -1,0 +1,16 @@
+package com.expensemanagement.enums;
+
+public enum AuditAction {
+    USER_REGISTER,
+    USER_LOGIN,
+    USER_STATUS_CHANGE,
+    MANAGER_ASSIGN,
+    EXPENSE_CREATE,
+    EXPENSE_UPDATE,
+    EXPENSE_CANCEL,
+    EXPENSE_APPROVE,
+    EXPENSE_REJECT,
+    CATEGORY_CREATE,
+    CATEGORY_UPDATE,
+    CATEGORY_DELETE
+}
