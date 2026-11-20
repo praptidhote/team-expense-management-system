@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased text-slate-800 bg-slate-50;
+  }
+}
+
+@media print {
+  @page {
+    margin: 1.5cm;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
