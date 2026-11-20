@@ -1,5 +1,9 @@
 # Custom ignore rules for Team Expense System
 backend/target/
+backend/data/
+data/
+*.mv.db
+*.trace.db
 frontend/dist/
 frontend/node_modules/
 *.log
