@@ -24,7 +24,7 @@ An enterprise-grade full-stack web application designed for small and medium-siz
 9. [Local Setup & Running Guide](#9-local-setup--running-guide)
 10. [Demo Credentials](#10-demo-credentials)
 11. [Testing & Build Verification](#11-testing--build-verification)
-12. [User Interface & Screenshots](#12-user-interface--screenshots)
+12. [User Interface & Screenshots Walkthrough](#12-user-interface--screenshots-walkthrough)
 13. [Recommended Git Commit History](#13-recommended-git-commit-history)
 
 ---
@@ -460,29 +460,212 @@ dist/assets/index-DJlhcejr.js   747.73 kB
 
 ---
 
-## 12. User Interface & Screenshots
+## 12. User Interface & Screenshots Walkthrough
 
-### Account Registration Screen
-Clean corporate registration layout with department, job title, and assigned manager selection:
+Every screen in the application is built with a responsive enterprise UI (React 18, Tailwind CSS, Recharts, Lucide Icons) and integrates directly with Spring Boot REST APIs and Spring Security role-based access control. Below is a detailed walkthrough of all 13 core application views with live data:
 
-![Registration Screen](docs/screenshots/registration.png)
+### Visual Module Directory
 
-### Screen Directory Overview
-- **Employee Portal**:
-  - `My Dashboard`: Personal metric cards, monthly spending trend chart, and recent claims table.
-  - `Submit Expense`: Itemized claim form with drag-and-drop receipt upload.
-  - `My Expenses`: Filterable data table with status badges and cancellation buttons.
-  - `Expense Details`: Claim breakdown with invoice download link and chronological audit history.
-- **Manager Suite**:
-  - `Manager Dashboard`: Direct report metrics, team spend counters, and pending approvals summary.
-  - `Pending Approvals`: Dedicated review queue with one-click approval and mandatory rejection reasoning modal.
-- **Admin Governance**:
-  - `Admin Overview`: Organization-wide expenditure metrics and category spend distribution donut charts.
-  - `User Directory`: Workforce table with manager assignment modal and account status toggles.
-  - `Categories`: Add, edit, or deactivate company reimbursement categories.
-  - `System Audit Trail`: Complete activity log of all financial and authorization events.
-- **Analytics & Export**:
-  - `Expense Reports`: Multi-parameter filtered report with instant RFC 4180 CSV export and print view.
+| # | Page / Module | Target Role | Key Capabilities & Business Logic |
+| :-: | :--- | :--- | :--- |
+| **01** | [Authentication & Demo Access](#screenshot-1-authentication--demo-login-portal) | All Roles | JWT stateless login, BCrypt password check, 1-click test role selectors |
+| **02** | [Employee Registration](#screenshot-2-employee-account-registration) | Public / New User | Clean corporate registration, department, role, reporting manager assignment |
+| **03** | [Employee Expense Dashboard](#screenshot-3-employee-expense-dashboard) | Employee | Real-time financial KPI cards, Recharts monthly trend, company policy guidance |
+| **04** | [Itemized Expense Submission Form](#screenshot-4-itemized-expense-submission-form) | Employee | Multi-format receipt dropzone (PDF/PNG/JPG), date & amount validations |
+| **05** | [Employee Expense Ledger & Tracking](#screenshot-5-employee-expense-ledger--status-tracking) | Employee | Paginated claims table, multi-filter search, real-time status badges, cancel button |
+| **06** | [Expense Breakdown & Audit Trail](#screenshot-6-expense-breakdown--approval-audit-trail) | Employee / Manager | Claim itemization, invoice download, chronological approval lifecycle & feedback |
+| **07** | [Manager Approval Dashboard](#screenshot-7-manager-approval-dashboard) | Manager | Direct report counters, departmental spend monitoring, review queue link |
+| **08** | [Manager Pending Approvals Queue](#screenshot-8-manager-pending-approvals-queue) | Manager | Segregation of duties, direct report filtering, approve/reject modal |
+| **09** | [Executive Finance & Admin Overview](#screenshot-9-executive-finance--admin-overview) | Admin | Company-wide expenditure KPIs, category donut chart, monthly spend trends |
+| **10** | [Workforce User Management](#screenshot-10-workforce-user-management--hierarchy-directory) | Admin | Workforce directory, role assignments, reporting manager mapping, status toggles |
+| **11** | [Expense Categories & Classification](#screenshot-11-expense-categories--budget-classification) | Admin | Dynamic category CRUD, description management, active/inactive controls |
+| **12** | [Expense Reports & Financial Auditing](#screenshot-12-expense-reports--financial-auditing-suite) | Manager / Admin | Multi-parameter filters, live aggregate calculations, RFC 4180 CSV export & print view |
+| **13** | [System Audit Trail & Compliance Log](#screenshot-13-system-audit-trail--compliance-log) | Admin | Immutable compliance log, actor attribution, event timestamps, audit security |
+
+---
+
+### Screenshot 1: Authentication & Demo Login Portal
+*Secure entry portal with stateless JWT authentication, BCrypt verification, and instant one-click test profile buttons.*
+
+![Screenshot 1: Authentication & Demo Login Portal](docs/screenshots/01-login-screen.png)
+
+- **Route & API**: `/login` &rarr; `POST /api/auth/login`
+- **Key Features & UI Highlights**:
+  - Clean centered card layout with subtle deep-navy corporate gradient.
+  - Quick-fill demo credentials for **Employee**, **Manager**, and **Admin** to enable fast recruiter evaluation.
+  - Real-time client-side email format validation and password masking.
+  - Link to employee registration for new personnel joining the organization.
+- **Behind the Scenes**: Authenticates via Spring Security 6 `AuthenticationManager`, issues HMAC-SHA256 signed JWT Bearer token with embedded user ID, role, and expiration timestamp.
+
+---
+
+### Screenshot 2: Employee Account Registration
+*Self-service workforce onboarding with organizational department and reporting manager hierarchy mapping.*
+
+![Screenshot 2: Employee Account Registration](docs/screenshots/02-registration-screen.png)
+
+- **Route & API**: `/register` &rarr; `POST /api/auth/register`
+- **Key Features & UI Highlights**:
+  - Comprehensive registration form collecting First Name, Last Name, Corporate Email, Password, Department, Job Title, Assigned Reporting Manager, and Account Role.
+  - Dynamic dropdown populated from the backend database with active managers for hierarchical routing.
+  - Password strength verification with show/hide toggle.
+- **Behind the Scenes**: Validates corporate email uniqueness, hashes password with BCrypt (10 rounds), assigns `ROLE_EMPLOYEE`, establishes self-referential foreign key relationship to assigned manager, and writes initial `USER_REGISTER` audit event.
+
+---
+
+### Screenshot 3: Employee Expense Dashboard
+*Personal finance command center with real-time reimbursement metrics, monthly spending charts, and policy guidelines.*
+
+![Screenshot 3: Employee Expense Dashboard](docs/screenshots/03-employee-dashboard.png)
+
+- **Route & API**: `/dashboard` &rarr; `GET /api/dashboard/employee`
+- **Key Features & UI Highlights**:
+  - Four financial metric cards calculating **Total Submitted** ($2,340.99 across 10 requests), **Pending Approval** ($945.00 under review), **Approved Spending** ($1,341.79 ready for repayment), and **Rejected Amount** ($54.20 declined).
+  - Responsive Recharts bar chart displaying rolling monthly reimbursement trends (September through November).
+  - Corporate policy reminder card summarizing receipt requirements ($25 threshold), 30-day submission windows, and approval hierarchy rules.
+  - Quick-action button: `Submit New Expense` to immediately launch claim entry.
+- **Behind the Scenes**: Aggregate calculations performed in database via JPA Specifications and Spring Data `BigDecimal` queries, preventing client-side rounding inaccuracies.
+
+---
+
+### Screenshot 4: Itemized Expense Submission Form
+*Structured expense reimbursement claim form with multi-format receipt attachment and strict validation.*
+
+![Screenshot 4: Itemized Expense Submission Form](docs/screenshots/04-expense-submission-form.png)
+
+- **Route & API**: `/submit-expense` &rarr; `POST /api/expenses` (`multipart/form-data`)
+- **Key Features & UI Highlights**:
+  - Required fields: Expense Title, Expense Category dropdown, Payment Method (Company Card, Personal Card, Cash, Bank Transfer), Amount ($), and Expense Date.
+  - Detailed business justification textarea and optional client billable project code notes.
+  - Drag-and-drop receipt upload dropzone supporting PDF, PNG, and JPG formats up to 5MB.
+  - Date picker enforcing `@PastOrPresent` validation rule (future dates are blocked with clear feedback).
+- **Behind the Scenes**: Backend verifies MIME type, sanitizes file names with UUID prefixes to prevent directory traversal attacks, stores file to secure storage directory, creates `Expense` in `PENDING` state, logs initial status history, and dispatches in-app notification to the employee's assigned manager.
+
+---
+
+### Screenshot 5: Employee Expense Ledger & Status Tracking
+*Comprehensive personal expense history table with dynamic status badges, filters, and self-service cancellation.*
+
+![Screenshot 5: Employee Expense Ledger & Status Tracking](docs/screenshots/05-my-expenses-tracking.png)
+
+- **Route & API**: `/my-expenses` &rarr; `GET /api/expenses/my`
+- **Key Features & UI Highlights**:
+  - Live filter toolbar: free-text search by title/description, category dropdown, and status filter (`PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`).
+  - Itemized rows displaying Title & Subtitle, Category, Date, Formatted Amount (`$xxx.xx`), and color-coded status badges (Amber = Pending, Emerald = Approved, Rose = Rejected).
+  - Action buttons: `Details` to view full timeline, and `Cancel` (visible only on `PENDING` items).
+- **Behind the Scenes**: Spring Data JPA `Pageable` query scoped strictly to the authenticated `UserPrincipal` (`userId = principal.getId()`) to prevent Insecure Direct Object Reference (IDOR) attacks.
+
+---
+
+### Screenshot 6: Expense Breakdown & Approval Audit Trail
+*Deep claim inspection view showing receipt attachments, financial metadata, and chronological status change timeline.*
+
+![Screenshot 6: Expense Breakdown & Approval Audit Trail](docs/screenshots/06-expense-details-timeline.png)
+
+- **Route & API**: `/expenses/:id` &rarr; `GET /api/expenses/{id}` & `GET /api/expenses/{id}/history`
+- **Key Features & UI Highlights**:
+  - Top summary cards: Category tag, Expense Title, total claim amount in bold financial styling, Submitter Name, Expense Date, Payment Method, and Submission Timestamp.
+  - Receipt download/preview link with proper content-type handling.
+  - **Approval Audit Trail**: Visual chronological timeline tracing the request from initial submission (`PENDING`) through managerial decision (`REJECTED`), showing the acting manager (Jordan Lee), timestamp, and mandatory rejection feedback note (*"REJECTED: Please upload itemized transit fare receipt with tax breakdown."*).
+- **Behind the Scenes**: Backend verifies access permissions before serving expense details (only submitter, assigned manager, or admin may view). The audit trail is pulled from `ExpenseStatusHistory` to provide complete dispute transparency.
+
+---
+
+### Screenshot 7: Manager Approval Dashboard
+*Departmental oversight dashboard tracking direct reports' submissions, team spending volume, and pending tasks.*
+
+![Screenshot 7: Manager Approval Dashboard](docs/screenshots/07-manager-dashboard.png)
+
+- **Route & API**: `/manager` &rarr; `GET /api/dashboard/manager`
+- **Key Features & UI Highlights**:
+  - Manager KPI cards: **Action Required** (3 pending direct report claims), **Team Total Spend** ($2,340.99 across 10 submissions), **Approved Requests** (4 signed off), and **Rejected Requests** (1 returned with comments).
+  - Quick action banner: `Review Pending Queue (3)` leading directly to the decision list.
+  - Recent pending submissions summary table with submitter name, email, claim title, date, amount, and direct `Review Request` shortcut buttons.
+- **Behind the Scenes**: Manager queries filter claims exclusively by `user.manager_id = managerId`. Enforces segregation of duties by blocking managers from approving their own expenses.
+
+---
+
+### Screenshot 8: Manager Pending Approvals Queue
+*Dedicated decision queue for team managers with one-click approval and mandatory rejection reasoning modal.*
+
+![Screenshot 8: Manager Pending Approvals Queue](docs/screenshots/08-pending-approvals-queue.png)
+
+- **Route & API**: `/approvals` &rarr; `GET /api/approvals/pending`
+- **Key Features & UI Highlights**:
+  - Focused decision-making view displaying submitter profile (Taylor Reed), claim description, category, submission date, amount, and `Review` action button.
+  - Clicking `Review` opens a modal showing receipt preview, itemized claim lines, and two explicit decision triggers: `Approve Expense` (single click with optional comment) and `Reject Expense` (enforces mandatory non-empty rejection justification before enabling the button).
+- **Behind the Scenes**: Decision endpoints (`POST /api/approvals/{id}/approve` and `POST /api/approvals/{id}/reject`) execute inside transactional service methods that record reviewer identity, update parent status, insert an `ExpenseApproval` record, write an `ExpenseStatusHistory` event, and notify the submitting employee.
+
+---
+
+### Screenshot 9: Executive Finance & Admin Overview
+*C-suite and finance administrator dashboard displaying company-wide expenditures, workforce metrics, and visual distribution.*
+
+![Screenshot 9: Executive Finance & Admin Overview](docs/screenshots/09-admin-executive-dashboard.png)
+
+- **Route & API**: `/admin` &rarr; `GET /api/dashboard/admin`
+- **Key Features & UI Highlights**:
+  - Executive financial summary: **Company Approved Spend** ($1,341.79 across 6 claims), **Pending in Pipeline** ($945.00 awaiting sign-off), **Total Claims Volume** ($2,340.99 submitted), and **Workforce Size** (4 active accounts: 3 employees, 1 manager).
+  - Dual Recharts analytics panels:
+    - **Monthly Corporate Spend Trends**: Multi-month volume comparison bar chart.
+    - **Category Spending Distribution**: Interactive donut chart with legend showing budget allocations across Accommodation, Food & Meals, Internet & Phone, Office Supplies, Software & Tools, Transportation, and Travel.
+- **Behind the Scenes**: Backend executes aggregated JPA group-by queries on `ExpenseCategory` and month-trunc functions, returning type-safe `BigDecimal` totals directly to the frontend chart components.
+
+---
+
+### Screenshot 10: Workforce User Management & Hierarchy Directory
+*Administrative workforce directory for role management, reporting manager assignments, and account status controls.*
+
+![Screenshot 10: Workforce User Management & Hierarchy Directory](docs/screenshots/10-user-management-directory.png)
+
+- **Route & API**: `/admin/users` &rarr; `GET /api/users` & `PATCH /api/users/{id}/manager` & `PATCH /api/users/{id}/status`
+- **Key Features & UI Highlights**:
+  - Workforce data table displaying Employee Name, Corporate Email, Department & Title, Role badge (`EMPLOYEE`, `MANAGER`, `ADMIN`), Assigned Manager, Account Status (`Active` / `Inactive`), and Action buttons.
+  - Interactive `Assign Manager` button opens a modal to dynamically change or reassign an employee's approval hierarchy.
+  - `Deactivate` / `Activate` buttons to instantly revoke or restore employee system login privileges without deleting history.
+- **Behind the Scenes**: Controller is protected by `@PreAuthorize("hasRole('ADMIN')")`. Manager assignment validates against circular hierarchy chains and self-assignment, updating audit logs for governance compliance.
+
+---
+
+### Screenshot 11: Expense Categories & Budget Classification
+*Centralized administration for managing allowable reimbursement categories and company policy descriptions.*
+
+![Screenshot 11: Expense Categories & Budget Classification](docs/screenshots/11-category-management.png)
+
+- **Route & API**: `/admin/categories` &rarr; `GET /api/categories` & `POST /api/categories` & `PUT /api/categories/{id}`
+- **Key Features & UI Highlights**:
+  - Management table listing all 8 standardized expense categories: Travel, Food & Meals, Accommodation, Office Supplies, Internet & Phone, Software & Tools, Transportation, and Other.
+  - Description column detailing company reimbursement rules (e.g., *"Developer software licenses, cloud tools, SaaS subscriptions"*).
+  - Status indicators (`Active`) and action buttons: `Edit` category metadata, `Deactivate` to retire obsolete codes, and `+ New Category` modal trigger.
+- **Behind the Scenes**: When categories are deactivated, existing expense history maintains relational integrity without cascade deletions, preventing historical auditing inconsistencies.
+
+---
+
+### Screenshot 12: Expense Reports & Financial Auditing Suite
+*Multi-dimensional financial filtering suite with instant RFC 4180 CSV export and print-ready auditing view.*
+
+![Screenshot 12: Expense Reports & Financial Auditing Suite](docs/screenshots/12-expense-reports-analytics.png)
+
+- **Route & API**: `/reports` &rarr; `GET /api/reports/expenses` & `GET /api/reports/export/csv`
+- **Key Features & UI Highlights**:
+  - Multi-parameter filter bar: Category dropdown, Status dropdown, Start Date picker, and End Date picker.
+  - Live calculated aggregate summary cards: **Total Filtered Volume** ($2,340.99 across 10 records), **Approved Claims** (6 signed off), **Pending Review** (3 awaiting decision), and **Rejected Requests** (1 declined).
+  - Data table with ID, Submitter Name, Email, Title & Category, Expense Date, Payment Method, Status badge, and Amount.
+  - Export triggers: `Export to CSV` (streams an RFC 4180 CSV file directly from the Spring Boot backend) and `Print Report` (triggers browser print stylesheet with headers, totals, and signatures formatted for accounting filing).
+- **Behind the Scenes**: `ReportServiceImpl` uses dynamic Spring Data JPA `Specification<Expense>` criteria queries to apply only selected filters, calculating exact sum totals using `CriteriaBuilder.sum()` with `BigDecimal`.
+
+---
+
+### Screenshot 13: System Audit Trail & Compliance Log
+*Tamper-evident system activity log capturing security events, expense lifecycles, and managerial decisions.*
+
+![Screenshot 13: System Audit Trail & Compliance Log](docs/screenshots/13-audit-logs-compliance.png)
+
+- **Route & API**: `/admin/audit-logs` &rarr; `GET /api/audit-logs`
+- **Key Features & UI Highlights**:
+  - Paginated audit log table displaying exact Timestamp, Actor Name & Email, Action badge (`USER_LOGIN`, `USER_REGISTER`, `EXPENSE_CREATE`, `EXPENSE_APPROVE`, `EXPENSE_REJECT`), Entity Reference (`Expense #8`, `User #1`), and human-readable Description.
+  - Real-time logging of authentication events and status transitions.
+- **Behind the Scenes**: Audit entries are written synchronously during business operations inside `@Transactional` service methods. The `AuditLog` entity is insert-only (no update or delete APIs exist), guaranteeing an immutable compliance trail for corporate auditing and SOX-style financial compliance.
 
 ---
 
