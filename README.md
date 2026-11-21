@@ -1,5 +1,6 @@
 # Team Expense Approval and Management System
 
+[![Live Demo](https://img.shields.io/badge/Demo-Live%20Website-success?style=for-the-badge&logo=render)](https://team-expense-management-system.onrender.com)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-18.3-blue.svg)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-purple.svg)](https://vitejs.dev/)
@@ -7,6 +8,9 @@
 [![Java](https://img.shields.io/badge/Java-17%20LTS-orange.svg)](https://www.oracle.com/java/)
 [![JWT](https://img.shields.io/badge/Security-JWT%20Stateless-red.svg)](https://jwt.io/)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
+
+> 🚀 **Live Production Application**: **[https://team-expense-management-system.onrender.com](https://team-expense-management-system.onrender.com)**  
+> *Ready for evaluation: Features instant 1-click test login buttons for Employee, Manager, and Admin accounts.*
 
 An enterprise-grade full-stack web application designed for small and medium-sized organizations to automate employee expense reimbursements, enforce multi-tier managerial approval workflows, prevent unauthorized claims, and deliver real-time financial expenditure analytics.
 
