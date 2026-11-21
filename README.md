@@ -418,7 +418,7 @@ For deploying this application live to **Render** (free 1-click full-stack conta
 
 ## 10. Demo Credentials
 
-The login screen provides **one-click demo login buttons** to populate test credentials instantly:
+The login portal on the live website (**[https://team-expense-management-system.onrender.com](https://team-expense-management-system.onrender.com)**) provides **one-click demo login buttons** to populate test credentials instantly:
 
 | Role | Email | Password | Primary Capabilities |
 | :--- | :--- | :--- | :--- |
