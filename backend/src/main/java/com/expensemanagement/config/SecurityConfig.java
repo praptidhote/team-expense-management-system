@@ -32,6 +32,25 @@ public class SecurityConfig {
                 .addFilter(corsFilter)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/assets/**",
+                                "/favicon.ico",
+                                "/*.png",
+                                "/*.jpg",
+                                "/*.svg",
+                                "/login",
+                                "/register",
+                                "/dashboard",
+                                "/submit-expense",
+                                "/my-expenses",
+                                "/expenses/**",
+                                "/manager",
+                                "/approvals",
+                                "/admin",
+                                "/admin/**",
+                                "/reports",
+                                "/docs/**",
                                 "/api/auth/**",
                                 "/h2-console/**",
                                 "/error",
@@ -40,7 +59,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/approvals/**").hasAnyRole("MANAGER", "ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

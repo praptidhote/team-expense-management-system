@@ -121,7 +121,7 @@ class AuthServiceTest {
         when(userRepository.existsByEmail("jane.smith@company.com")).thenReturn(false);
         when(roleRepository.findByName(RoleName.ROLE_EMPLOYEE)).thenReturn(Optional.of(employeeRole));
         when(passwordEncoder.encode("Password123!")).thenReturn("encoded_pass");
-        when(userRepository.save(any(User.class))).thenReturn(sampleUser);
+        when(userRepository.saveAndFlush(any(User.class))).thenReturn(sampleUser);
 
         Authentication auth = mock(Authentication.class);
         when(authenticationManager.authenticate(any())).thenReturn(auth);
@@ -131,7 +131,7 @@ class AuthServiceTest {
 
         assertNotNull(response);
         assertEquals("mock.jwt.token", response.getToken());
-        verify(userRepository).save(any(User.class));
+        verify(userRepository).saveAndFlush(any(User.class));
     }
 
     @Test

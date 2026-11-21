@@ -406,6 +406,10 @@ npm run dev
 ```
 - Open `http://localhost:5173` in your browser.
 
+### 3. Deploy Live Online (24/7 Cloud Hosting)
+For deploying this application live to **Render** (free 1-click full-stack container) or **Vercel** so anyone can access it directly via a public URL, see the step-by-step guide in:
+👉 **[DEPLOYMENT.md](DEPLOYMENT.md)**
+
 ---
 
 ## 10. Demo Credentials

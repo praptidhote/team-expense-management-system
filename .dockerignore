@@ -1,0 +1,10 @@
+.git
+.github
+node_modules
+target
+dist
+*.log
+backend/target
+frontend/node_modules
+frontend/dist
+docs/screenshots
